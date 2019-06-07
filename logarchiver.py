@@ -7,7 +7,8 @@ import sys
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Tool made to archive log file")
+    parser = argparse.ArgumentParser(
+        description="Tool made to archive log file - (Stefano Crapanzano - s.crapanzano@gmail.com)")
     parser.add_argument('--log_path', help='Full path of the log to archive',
                         required=True)
     parser.add_argument('--log_extension', help='Extension of the log to archive',
