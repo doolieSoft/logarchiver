@@ -46,7 +46,7 @@ def main():
 
     log_name_with_date = str(date_exec) + "-" + str(log_name[0])
 
-    shutil.move(log_path, destination_directory + log_name_with_date + log_extension)
+    shutil.move(log_path, os.path.join(destination_directory, log_name_with_date + log_extension))
 
 
 def path_leaf(path):
