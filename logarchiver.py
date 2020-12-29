@@ -8,45 +8,41 @@ import sys
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Tool made to archive log file - (Stefano Crapanzano - s.crapanzano@gmail.com)")
-    parser.add_argument('--log_path', help='Full path of the log to archive',
+        description="Script used to archive log files - (Stefano Crapanzano - s.crapanzano@gmail.com)")
+    parser.add_argument('--log_fullpath', help='Full path of file to archive',
                         required=True)
-    parser.add_argument('--log_extension', help='Extension of the log to archive',
-                        required=True)
-    parser.add_argument('--destination_directory', help='Directory where the log will be placed',
+    parser.add_argument('--dest_dir', help='Directory where the archived log file will be moved',
                         required=True)
 
     args = parser.parse_args()
-    log_path = vars(args)['log_path']
-    log_extension = vars(args)['log_extension']
-    destination_directory = vars(args)['destination_directory']
+    log_fullpath = vars(args)['log_fullpath']
+    dest_dir = vars(args)['dest_dir']
 
-    if not str(destination_directory).endswith("\\"):
-        destination_directory += "\\"
+    if not os.path.isfile(log_fullpath):
+        print(f"{log_fullpath} doesn't exist")
+        sys.exit(-1)
 
-    if not os.path.isdir(destination_directory):
+    if not os.path.isdir(dest_dir):
         try:
-            os.mkdir(destination_directory)
+            os.mkdir(dest_dir)
         except:
-            print("An exception occurred while creating the destination folder " + destination_directory)
-            sys.exit(0)
+            print(f"An exception occurred while creating the destination folder {dest_dir}")
+            sys.exit(-1)
 
-    if not os.path.isfile(log_path):
-        print("File " + log_path + " not present")
-        sys.exit(0)
-    log_file_name = path_leaf(log_path)
+    if not str(dest_dir).endswith(os.sep):
+        dest_dir += os.sep
 
-    if not str(log_extension).startswith('.'):
-        ".".join(log_extension)
-
-    log_name = log_file_name.split(log_extension)
+    log_filename = path_leaf(log_fullpath)
+    log_filename_and_ext = os.path.splitext(log_filename)
 
     timestamp = time.localtime()
     date_exec = str(timestamp.tm_year) + str(timestamp.tm_mon).zfill(2) + str(timestamp.tm_mday).zfill(2)
 
-    log_name_with_date = str(date_exec) + "-" + str(log_name[0])
+    log_name_with_date = f"{date_exec}-{log_filename_and_ext[0]}"
 
-    shutil.move(log_path, os.path.join(destination_directory, log_name_with_date + log_extension))
+    shutil.move(log_fullpath, os.path.join(dest_dir, log_name_with_date + log_filename_and_ext[1]))
+    print(f"Log {log_filename} has been archived")
+    sys.exit(0)
 
 
 def path_leaf(path):

@@ -5,5 +5,4 @@ __pycache__/
 build/
 dist/
 logarchiver.spec
-/build/
 /logarchiverenv/
